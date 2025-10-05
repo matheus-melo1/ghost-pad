@@ -1,7 +1,14 @@
 "use client";
 
 import type { NoteType } from "@/core/models/schemas/note.schema";
-import { EllipsisVertical, FileText, Pencil, Trash2 } from "lucide-react";
+import {
+  Archive,
+  ArchiveX,
+  EllipsisVertical,
+  FileText,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 import clsx from "clsx";
 import {
   Popover,
@@ -9,9 +16,7 @@ import {
   PopoverTrigger,
 } from "@/core/components/ui/popover";
 import { Button } from "@/core/components/ui/button";
-import { deleteNote } from "@/core/lib/actions/shared/delete-note";
-import { redirect } from "next/navigation";
-import { useState } from "react";
+import { useNoteCard } from "@/features/note-editor/hooks/use-note-card";
 
 interface INoteProps {
   note: NoteType;
@@ -19,26 +24,15 @@ interface INoteProps {
 }
 
 export default function NoteCard({ note, selected }: INoteProps) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const onDeleteNote = async (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    noteId: string,
-  ) => {
-    await deleteNote(noteId);
-  };
-
-  const onChangeNote = async (noteId: string) => {
-    redirect(`/notes/${noteId}`);
-  };
-
-  const onClickPopover = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => {
-    event.stopPropagation();
-    event.preventDefault();
-    setIsOpen((prev) => !prev);
-  };
+  const {
+    isOpen,
+    setIsOpen,
+    onDeleteNote,
+    onChangeNote,
+    onClickPopover,
+    onClickArchived,
+    archived,
+  } = useNoteCard(note);
 
   return (
     <div
@@ -51,7 +45,7 @@ export default function NoteCard({ note, selected }: INoteProps) {
     >
       <div className="flex items-center gap-2">
         <FileText />
-        <p>{note.name}</p>
+        <p>{note.title}</p>
       </div>
 
       <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -67,6 +61,16 @@ export default function NoteCard({ note, selected }: INoteProps) {
           >
             <Pencil />
             Editar
+          </Button>
+          <Button
+            variant="ghost"
+            className="flex w-full justify-start gap-3 font-semibold"
+            onClick={() =>
+              onClickArchived(archived === "false" || !archived ? true : false)
+            }
+          >
+            {archived === "false" ? <Archive /> : <ArchiveX />}
+            {archived === "false" ? "Arquivar" : "Desarquivar"}
           </Button>
           <Button
             onClick={(event) => onDeleteNote(event, note.id)}

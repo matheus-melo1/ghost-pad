@@ -1,7 +1,7 @@
 import { InputForm } from "@/core/components/form/input-form";
 import { Key, Mail } from "lucide-react";
 import { Button } from "@/core/components/ui/button";
-import type { useAuthType } from "../domain/use-auth";
+import type { useAuthType } from "../hooks/use-auth";
 
 export default function AuthLogin(props: useAuthType) {
   const { formHook, onSubmit, onChangeType, isLoading } = props;

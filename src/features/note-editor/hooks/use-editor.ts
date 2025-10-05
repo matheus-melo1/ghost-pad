@@ -9,18 +9,47 @@ import Typography from "@tiptap/extension-typography";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Superscript, Subscript } from "lucide-react";
+import { api } from "@/trpc/react";
+import { useCallback, useEffect, useState } from "react";
+import { useDebounceValue } from "usehooks-ts";
+import { changeTitleNote } from "@/core/lib/actions/shared/change-title-note";
+import toast from "react-hot-toast";
+import { changeContentNote } from "@/core/lib/actions/shared/change-content-note";
+import { debounce } from "lodash";
 
-export const useEditorHook = () => {
+interface IUseEditor {
+  id: string;
+}
+
+export const useEditorHook = (props: IUseEditor) => {
+  const { id } = props;
+
+  const { getNoteById } = api.note;
+  const {
+    data: note,
+    isError: isErrorNote,
+    isLoading: isLoadingNote,
+    refetch: refetchNote,
+  } = getNoteById.useQuery({
+    id,
+  });
+
+  const [title, setTitle] = useState(note?.title ?? "");
+  const [debouncedTitle] = useDebounceValue(title, 500);
+  const [content, setContent] = useState<JSON>();
+  const [saved, setSaved] = useState(false);
+
   const editor = useEditor({
-    immediatelyRender: false,
-    shouldRerenderOnTransaction: false,
+    immediatelyRender: true,
+    shouldRerenderOnTransaction: true,
     editorProps: {
       attributes: {
-        autocomplete: "off",
-        autocorrect: "off",
-        autocapitalize: "off",
-        "aria-label": "Main content area, start typing to enter text.",
-        class: "simple-editor",
+        // autocomplete: "off",
+        // autocorrect: "off",
+        // autocapitalize: "off",
+        // "aria-label": "Main content area, start typing to enter text.",
+        style: "caret-color: #3b82f6;",
+        // class: "editor-purple",
       },
     },
     extensions: [
@@ -34,7 +63,12 @@ export const useEditorHook = () => {
       HorizontalRule,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       TaskList,
-      TaskItem.configure({ nested: true }),
+      TaskItem.configure({
+        nested: true,
+        HTMLAttributes: {
+          class: "task-item",
+        },
+      }),
       Highlight.configure({ multicolor: true }),
       Image,
       Typography,
@@ -49,11 +83,71 @@ export const useEditorHook = () => {
         onError: (error) => console.error("Upload failed:", error),
       }),
     ],
-    content: "# Hello World",
+    content,
+    onUpdate: useCallback(
+      debounce(() => {
+        onChangeContent().catch(console.error);
+      }, 500),
+      [],
+    ),
   });
+
+  const onChangeTitle = async () => {
+    if (debouncedTitle === note?.title) return;
+
+    const result = await changeTitleNote({ id, title: debouncedTitle });
+
+    if (!result.success) {
+      toast.error(result.error);
+    }
+  };
+  const toggleSaved = () => setSaved((prev) => !prev);
+
+  const onChangeContent = async () => {
+    if (JSON.stringify(editor.getJSON().content) === JSON.stringify(note?.text))
+      return;
+
+    toggleSaved();
+    const result = await changeContentNote({
+      id,
+      content: JSON.stringify(editor.getJSON().content),
+    });
+
+    if (!result.success) {
+      toast.error(result.error);
+
+      toggleSaved();
+      return;
+    }
+
+    // toast.success("Nota salva com sucesso!");
+
+    toggleSaved();
+    await refetchNote();
+  };
+
+  useEffect(() => {
+    if (note) {
+      setTitle(note.title);
+      editor.commands.setContent(content!);
+      setContent(note.text as JSON);
+    }
+  }, [note, editor, content]);
+
+  useEffect(() => {
+    if (!debouncedTitle || !note) return;
+    onChangeTitle().catch(console.error);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedTitle]);
 
   return {
     editor,
+    note,
+    isErrorNote,
+    title,
+    setTitle,
+    isLoadingNote,
+    saved,
   };
 };
 

@@ -5,6 +5,7 @@ import {
 } from "@/core/models/schemas/note.schema";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import z from "zod";
+import { sortBy } from "lodash";
 
 export const noteRouter = createTRPCRouter({
   createNoteEmpty: protectedProcedure.mutation(async ({ ctx }) => {
@@ -13,8 +14,12 @@ export const noteRouter = createTRPCRouter({
     const action = ctx.db.note.create({
       data: {
         name: "empty",
-        title: "Empty",
-        text: {},
+        title: "Nota vazia",
+        text: {
+          type: "paragraph",
+          attrs: { textAlign: null },
+          content: [{ text: "Texto Vazio", type: "text" }],
+        },
         userId,
         isPublic: false,
         archived: false,
@@ -34,8 +39,23 @@ export const noteRouter = createTRPCRouter({
       },
     });
 
-    return notes;
+    return sortBy(notes, (note) => note.createdAt);
   }),
+
+  archiveNoteById: protectedProcedure
+    .input(z.object({ id: z.string(), isArchived: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      const note = await ctx.db.note.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          archived: input.isArchived,
+        },
+      });
+
+      return note;
+    }),
 
   getNoteById: protectedProcedure
     .input(z.object({ id: z.string() }))
@@ -50,6 +70,36 @@ export const noteRouter = createTRPCRouter({
       if (!note) throw new Error("Note not found");
 
       return note as NoteType;
+    }),
+
+  changeTitleNote: protectedProcedure
+    .input(z.object({ id: z.string(), title: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const note = await ctx.db.note.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          title: input.title,
+        },
+      });
+
+      return note;
+    }),
+
+  changeContentNote: protectedProcedure
+    .input(z.object({ id: z.string(), content: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const note = await ctx.db.note.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          text: JSON.parse(input.content),
+        },
+      });
+
+      return note;
     }),
 
   deleteNoteById: protectedProcedure

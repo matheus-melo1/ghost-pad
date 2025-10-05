@@ -41,6 +41,8 @@
     "@tiptap/extension-list": "^3.3.0",
     "@tiptap/extension-subscript": "^3.3.0",
     "@tiptap/extension-superscript": "^3.3.0",
+    "@tiptap/extension-task-item": "^3.6.5",
+    "@tiptap/extension-task-list": "^3.6.5",
     "@tiptap/extension-text-align": "^3.3.0",
     "@tiptap/extension-typography": "^3.3.0",
     "@tiptap/extensions": "^3.3.0",
@@ -53,6 +55,7 @@
     "bcrypt-ts": "^7.1.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "lodash": "^4.17.21",
     "lodash.throttle": "^4.1.1",
     "lucide-react": "^0.542.0",
     "next": "^15.2.3",
@@ -67,6 +70,7 @@
     "server-only": "^0.0.1",
     "superjson": "^2.2.1",
     "tailwind-merge": "^3.3.1",
+    "usehooks-ts": "^3.1.1",
     "zod": "^3.24.2"
   },
   "devDependencies": {
