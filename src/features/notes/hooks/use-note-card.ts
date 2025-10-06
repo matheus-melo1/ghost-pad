@@ -1,6 +1,6 @@
 import { deleteNote } from "@/core/lib/actions/shared/delete-note";
 import { redirect, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import React, { useState } from "react";
 import { archiveNote } from "@/core/lib/actions/shared/archive-note";
 import type { NoteType } from "@/core/models/schemas/note.schema";
 import toast from "react-hot-toast";
@@ -17,11 +17,10 @@ export const useNoteCard = (note: NoteType) => {
     event.stopPropagation();
     event.preventDefault();
     await deleteNote(noteId);
-    // redirect(`/notes/empty?archived=${archived ?? "false"}`);
   };
 
-  const onChangeNote = async (noteId: string) => {
-    redirect(`/notes/${noteId}?archived=${archived ?? "false"}`);
+  const onChangeNote = async (noteId: string, archived: boolean) => {
+    redirect(`/notes/${noteId}?archived=${archived}`);
   };
 
   const onClickPopover = (
@@ -32,7 +31,10 @@ export const useNoteCard = (note: NoteType) => {
     setIsOpen((prev) => !prev);
   };
 
-  const onClickArchived = async (isArchived: boolean) => {
+  const onClickArchived = async (
+    ev: React.MouseEvent<HTMLButtonElement>,
+    isArchived: boolean,
+  ) => {
     const result = await archiveNote({ id: note.id, isArchived });
     if (!result.success) {
       toast.error(result.error);

@@ -1,13 +1,17 @@
 import { Button } from "@/core/components/ui/button";
 import { Upload } from "lucide-react";
-import NoteCard from "./note-card";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/core/components/ui/tooltip";
+import { api } from "@/trpc/server";
+import NoteCardRecents from "./note-card-recents";
 
-export default function NotesRecents() {
+export default async function NotesRecents() {
+  const { getNotes } = api.note;
+  const notes = await getNotes();
+
   return (
     <section className="mx-auto w-4/5 space-y-8 p-3">
       <div className="flex w-full items-center justify-between">
@@ -30,12 +34,8 @@ export default function NotesRecents() {
       </div>
 
       <div className="grid grid-cols-5 gap-6">
-        {Array.from({ length: 10 }).map((_, index) => (
-          <NoteCard
-            className="!min-h-64"
-            key={index}
-            label={`Documento ${index + 1}`}
-          />
+        {notes.map((note, index) => (
+          <NoteCardRecents className="!min-h-64" note={note} key={index} />
         ))}
       </div>
     </section>
