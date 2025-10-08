@@ -6,8 +6,8 @@ Recursos de diagramas estão planejados e serão adicionados em breve.
 
 ## Preview
 
-<img src="public/screenshot_readme/login-page.png" alt="Login page" width="400" />
-<img src="public/screenshot_readme/note-editor.png" alt="Note page" width="400" />
+![Login Page](public/screenshot_readme/login-page.png)
+![Note Page](public/screenshot_readme/note-editor.png)
 
 ## Tecnologias Principais
 
