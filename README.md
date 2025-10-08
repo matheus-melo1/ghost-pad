@@ -4,6 +4,11 @@ GhostPad é um projeto pessoal focado em oferecer uma experiência moderna e flu
 O aplicativo foi desenvolvido com foco em simplicidade, performance e produtividade.  
 Recursos de diagramas estão planejados e serão adicionados em breve.
 
+## Preview
+
+<img src="public/screenshot_readme/login-page.png" alt="Login page" width="400" />
+<img src="public/screenshot_readme/note-editor.png" alt="Note page" width="400" />
+
 ## Tecnologias Principais
 
 - **Next.js** – framework React com renderização híbrida (SSR/SSG) e excelente performance.

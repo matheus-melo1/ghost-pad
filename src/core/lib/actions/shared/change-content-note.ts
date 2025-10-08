@@ -28,6 +28,7 @@ export async function changeContentNote({
     await caller.note.changeContentNote({ id, content });
 
     revalidatePath("/notes");
+    revalidatePath(`/notes/${id}`);
     return actionSuccess({ id, content }, "Nota editada com sucesso");
   } catch {
     return actionError("Não foi possível editar o nome da nota");

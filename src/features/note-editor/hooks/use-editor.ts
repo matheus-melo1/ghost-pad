@@ -16,6 +16,7 @@ import { changeTitleNote } from "@/core/lib/actions/shared/change-title-note";
 import toast from "react-hot-toast";
 import { changeContentNote } from "@/core/lib/actions/shared/change-content-note";
 import { debounce } from "lodash";
+import type { NoteType } from "@/core/models/schemas/note.schema";
 
 interface IUseEditor {
   id: string;
@@ -25,11 +26,12 @@ export const useEditorHook = (props: IUseEditor) => {
   const { id } = props;
 
   const { getNoteById } = api.note;
+  const { note: noteUtils } = api.useUtils();
+
   const {
     data: note,
     isError: isErrorNote,
     isLoading: isLoadingNote,
-    refetch: refetchNote,
   } = getNoteById.useQuery({
     id,
   });
@@ -87,7 +89,7 @@ export const useEditorHook = (props: IUseEditor) => {
     onUpdate: useCallback(
       debounce(() => {
         onChangeContent().catch(console.error);
-      }, 500),
+      }, 2000),
       [],
     ),
   });
@@ -120,10 +122,12 @@ export const useEditorHook = (props: IUseEditor) => {
       return;
     }
 
+    console.log(editor.getJSON());
+
     // toast.success("Nota salva com sucesso!");
 
+    noteUtils.getNoteById.setData({ id }, { ...note, text: editor.getJSON() });
     toggleSaved();
-    await refetchNote();
   };
 
   useEffect(() => {

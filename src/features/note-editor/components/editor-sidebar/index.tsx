@@ -34,9 +34,9 @@ export function EditorSidebar(props: NoteEditorParams) {
             <Avatar>
               <AvatarImage
                 className="object-cover"
-                src="https://gifsec.com/wp-content/uploads/2022/10/cute-anime-girl-11.gif"
+                src="https://i.pinimg.com/originals/e8/5d/db/e85ddba8a747c4e8c885fa05e4ac3cd7.gif"
               />
-              <AvatarFallback>U</AvatarFallback>
+              <AvatarFallback>MA</AvatarFallback>
             </Avatar>
             <p className="text-lg font-medium">User</p>
           </div>
