@@ -1,29 +1,29 @@
-# Create T3 App
+# GhostPad
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+GhostPad é um projeto pessoal focado em oferecer uma experiência moderna e fluida para criação e organização de anotações.  
+O aplicativo foi desenvolvido com foco em simplicidade, performance e produtividade.  
+Recursos de diagramas estão planejados e serão adicionados em breve.
 
-## What's next? How do I make an app with this?
+## Tecnologias Principais
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- **Next.js** – framework React com renderização híbrida (SSR/SSG) e excelente performance.
+- **tRPC** – comunicação type-safe entre frontend e backend.
+- **Prisma** – ORM moderno para modelagem e acesso ao banco de dados.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Funcionalidades
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+- Criação e edição de anotações.
+- Armazenamento de dados persistente via Prisma.
+- Integração completa entre frontend e backend com tRPC.
+- Interface moderna e responsiva.
+- **(Em breve)** Ferramenta visual para criação de diagramas.
+- **(Em breve)** Conexões entre anotações e diagramas.
 
-## Learn More
+## Instalação
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+Clone o repositório e instale as dependências:
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+```bash
+git clone https://github.com/matheus-melo1/ghost-pad.git
+cd ghostpad
+npm install
